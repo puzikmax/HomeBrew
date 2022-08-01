@@ -16,7 +16,7 @@ public class Application {
     private final static Logger LOG;
 
     private final static int COUNT_ACCOUNTS = 10;
-    private final static int START_MONEY_ON_ACCOUNT = 1000;
+    private final static int START_MONEY_ON_ACCOUNT = 100;
     private final static int COUNT_OPERATION = 100;
 
     static {
@@ -29,6 +29,7 @@ public class Application {
     public static void main(String[] args) throws InterruptedException {
         ScheduledExecutorService threadsPool = new ScheduledThreadPoolExecutor(5);
 
+
         List<Account> accountList = new LinkedList<>();
         for (int i = 0; i < COUNT_ACCOUNTS; i++) {
             accountList.add(new Account(Integer.toString(i), START_MONEY_ON_ACCOUNT));
@@ -36,15 +37,13 @@ public class Application {
 
         for (int i = 0; i < COUNT_OPERATION; i++) {
             int finalI = i;
-            threadsPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int indexFrom = getRandomIndex();
+            threadsPool.execute(() -> {
+                    int indexFrom = (int) (Math.random() * COUNT_ACCOUNTS);
                     int indexTo = indexFrom;
-                    int amount = (int) (1 + Math.random() * (START_MONEY_ON_ACCOUNT - 1));
+                    int amount = (int) (1 + Math.random() * (START_MONEY_ON_ACCOUNT - 10));
                     while (indexFrom == indexTo) {
-                        indexTo = getRandomIndex();
-                    }
+                        indexTo = (int) (Math.random() * COUNT_ACCOUNTS);
+                   }
                     Account from = accountList.get(indexFrom);
                     Account to = accountList.get(indexTo);
 
@@ -54,11 +53,7 @@ public class Application {
                         LOG.warning(notEnoughMoneyAccount.getMessage());
                     }
                 }
-
-                private int getRandomIndex() {
-                    return (int) (Math.random() * COUNT_ACCOUNTS);
-                }
-            });
+            );
         }
 
         threadsPool.shutdown();

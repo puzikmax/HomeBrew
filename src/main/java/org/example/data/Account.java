@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Account {
 
-    private volatile Long moneyAccount;
+    private  volatile long moneyAccount;
     private final String name;
     private final Lock lock;
 
@@ -16,6 +16,7 @@ public class Account {
     }
 
     public void add(long money) {
+
         this.moneyAccount += money;
     }
 
@@ -29,18 +30,22 @@ public class Account {
     }
 
     public void lock() {
+
         lock.lock();
     }
 
     public void unlock() {
+
         lock.unlock();
     }
 
     public String getName() {
+
         return name;
     }
 
-    public Long getMoneyAccount() {
+    public long getMoneyAccount() {
+
         return moneyAccount;
     }
 
